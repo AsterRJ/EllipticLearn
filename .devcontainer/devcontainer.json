@@ -1,0 +1,44 @@
+{
+  "name": "jax-open3d-cuda",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/opt/venv/bin/python"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+
+  "runArgs": [
+    "--gpus=all",
+    "--shm-size=2g",
+
+    "--env=DISPLAY",
+    "--env=QT_X11_NO_MITSHM=1",
+    "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw"
+  ],
+
+  "containerEnv": {
+    "NVIDIA_VISIBLE_DEVICES": "all",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,utility,graphics",
+    "MPLBACKEND": "QtAgg",
+    "PYTHONUNBUFFERED": "1"
+  },
+
+  // "postCreateCommand": "python -c \"import jax; print('JAX devices:', jax.devices())\" && python -c \"import open3d as o3d; print('Open3D:', o3d.__version__)\" && echo 'Devcontainer ready.'",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  }
+}
